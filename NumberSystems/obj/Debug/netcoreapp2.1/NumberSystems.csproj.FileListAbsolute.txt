@@ -1,0 +1,11 @@
+\\tsclient\S\,\CS Projects\NumberSystems\bin\Debug\netcoreapp2.1\NumberSystems.deps.json
+\\tsclient\S\,\CS Projects\NumberSystems\bin\Debug\netcoreapp2.1\NumberSystems.runtimeconfig.json
+\\tsclient\S\,\CS Projects\NumberSystems\bin\Debug\netcoreapp2.1\NumberSystems.runtimeconfig.dev.json
+\\tsclient\S\,\CS Projects\NumberSystems\bin\Debug\netcoreapp2.1\NumberSystems.dll
+\\tsclient\S\,\CS Projects\NumberSystems\bin\Debug\netcoreapp2.1\NumberSystems.pdb
+\\tsclient\S\,\CS Projects\NumberSystems\obj\Debug\netcoreapp2.1\NumberSystems.csprojAssemblyReference.cache
+\\tsclient\S\,\CS Projects\NumberSystems\obj\Debug\netcoreapp2.1\NumberSystems.csproj.CoreCompileInputs.cache
+\\tsclient\S\,\CS Projects\NumberSystems\obj\Debug\netcoreapp2.1\NumberSystems.AssemblyInfoInputs.cache
+\\tsclient\S\,\CS Projects\NumberSystems\obj\Debug\netcoreapp2.1\NumberSystems.AssemblyInfo.cs
+\\tsclient\S\,\CS Projects\NumberSystems\obj\Debug\netcoreapp2.1\NumberSystems.dll
+\\tsclient\S\,\CS Projects\NumberSystems\obj\Debug\netcoreapp2.1\NumberSystems.pdb
