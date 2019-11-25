@@ -1,9 +1,10 @@
 ﻿using System;
 using static System.Math;
+using System.Linq;
 
 namespace NumberSystems
 {
-    class MyMath
+    class MyMaths
     {
         public static bool IsPrime(int n)
         {
@@ -19,13 +20,13 @@ namespace NumberSystems
             return prime;
         }
 
-        /*public static int[] PrimesUntil(int n)
+        public static int[] PrimesUntil(int n)
         {
             int[] arr = new int[n];
             int indx = 0;
             //while indx is less than n
             int i = 2;
-            while (i < n)
+            while (i <= n)
             {
                 if (IsPrime(i))
                 {
@@ -34,111 +35,42 @@ namespace NumberSystems
                 }
                 i++;
             }
-            //change the '0' factors to '1' so it doesnt affect the multiplication
-            for (int j = 0; j < arr.Length; j++)
+
+            int[] temp = new int[indx];
+            for (int j = 0; j < indx; j++)
             {
-                if (arr[j] == 0)
-                {
-                    arr[j] = 1;
-                }
+                temp[j] = arr[j];
             }
+            arr = temp;
             return arr;
         }
 
         public static int[] Factors(int num)
         {
-            int[] factors = new int[num];
-            int indx = 0;
             int[] primes = PrimesUntil(num);
+            int[] factors = new int[0];
+            int lengthOfFactors = 0;
 
-            foreach (int prime in primes)
+            for (int i = 0; i < primes.Length; i++)
             {
-                if (num % prime == 0)
+                int item = primes[i];
+                if (num % item == 0)
                 {
-                    factors[indx] = prime;
-                    indx++;
+                    i--;
+                    lengthOfFactors++;
+                    num = num / item;
 
-                    int first = prime;
-                    int second = num / prime;
+                    //add new item to factors
+                    int[] temp = new int[lengthOfFactors];
+                    for (int j = 0; j < factors.Length; j++)
+                    {
+                        temp[j] = factors[j];
+                    }
+                    temp[lengthOfFactors - 1] = item;
+                    factors = temp;
                 }
             }
-
             return factors;
-        }*/
-
-        public static int[] NewFactors(int num)
-        {
-            int[] factors = new int[num];
-            int indx = 0;
-
-            int i = 2;
-            while (num > 0)
-            {
-                /* if its perfectly divisible
-                 *      num1 = i
-                 *      num2 = num / i
-                 *      
-                 *      if num1 is prime
-                 *          add to main factors
-                 *      else
-                 *          get its prime factors and add to main factors array
-                 *      repeat for num2
-                 *      */
-                bool num1prime = false;
-                bool num2prime = false;
-
-                 if (num%i == 0)
-                 {
-                    int num1 = i;
-                    int num2 = num / i;
-
-                    if (IsPrime(num1))
-                    {
-                        num1prime = true;
-                        factors[indx] = num1;
-                        indx++;
-                    }
-                    else
-                    {
-                        int[] secondaryFactors = NewFactors(num1);
-                        foreach (int item in secondaryFactors)
-                        {
-                            factors[indx] = item;
-                            indx++;
-                        }
-                    }
-                    if (IsPrime(num2))
-                    {
-                        num2prime = true;
-                        factors[indx] = num2;
-                        indx++;
-                    }
-                    else
-                    {
-                        int[] secondaryFactors = NewFactors(num2);
-                        foreach (int item in secondaryFactors)
-                        {
-                            factors[indx] = item;
-                            indx++;
-                        }
-                    }
-                if (num1prime && num2prime)
-                    {
-                        break;
-                    }
-                }
-            }
-            //change remaining 0's to a 1
-            int[] newarr = new int[indx + 1];
-            for (int newindx = 0; newindx < indx; newindx++)
-            {
-                if (factors[newindx] == 0)
-                {
-                    newarr[newindx] = factors[newindx];
-                    newindx++;
-                }
-            }
-            return newarr;
         }
 
     }
@@ -169,6 +101,11 @@ namespace NumberSystems
                 return "Divide by zero error.";
             }
 
+            if (top % bottom == 0)
+            {
+                return Convert.ToString(top / bottom);
+            }
+
             string simple = "";
             /*
              * get all prime factors of top as array
@@ -178,18 +115,112 @@ namespace NumberSystems
              * bottom = multiply all of remaining factors
              * return "top/bottom";
              * */
+
+            int[] topFactors = MyMaths.Factors(top);
+            int[] bottomFactors = MyMaths.Factors(bottom);
+
+            /*for (int i = 0; i < topFactors.Length; i++)
+            {
+                int numerator = topFactors[i];
+                for (int j = 0; j < bottomFactors.Length; j++)
+                {
+                    int denominator = bottomFactors[j];
+                    if (numerator == denominator)
+                    {
+                        int[] tempTop = Program.RemoveFromArray(topFactors, i);
+                        int[] tempBottom = Program.RemoveFromArray(bottomFactors, j);
+                        topFactors = tempTop;
+                        bottomFactors = tempBottom;
+                    }
+                }
+            }*/
+
+            for (int i = 0; i < topFactors.Length; i++)
+            {
+                int item = topFactors[i];
+                if (bottomFactors.Contains(item))
+                {
+                    //remove item from factors
+                    //remove item's index element from bottom factors
+
+                    int[] temptop = Program.RemoveFromArray(topFactors, i);
+                    int[] tempbottom = Program.RemoveFromArray(bottomFactors, Program.GetIndex(bottomFactors, item));
+                    topFactors = temptop;
+                    bottomFactors = tempbottom;
+                }
+            }
+
+            int newNumerator = 1;
+            int newDenominator = 1;
+
+            foreach (int item in topFactors)
+            {
+                newNumerator *= item;
+            }
+            foreach (int item in bottomFactors)
+            {
+                newDenominator *= item;
+            }
+
+            //Program.IntArrayPrinter(topFactors);
+            //Program.IntArrayPrinter(bottomFactors);
+            simple = Convert.ToString(newNumerator) + "/" + Convert.ToString(newDenominator);
             return simple;
         }
     }
     class Program
     {
+        public static void IntArrayPrinter(int[] arr)
+        {
+            foreach (int item in arr)
+            {
+                Console.Write("{0}, ", item);
+            }
+            Console.Write("\n");
+        }
+
+        public static int[] RemoveFromArray(int[] arr, int indx)
+        {
+            int[] temp = new int[arr.Length - 1];
+            int pointer = 0;
+            for (int i = 0; i < arr.Length; i++)
+            {
+                if (i != indx)
+                {
+                    temp[pointer] = arr[i];
+                    pointer++;
+                }
+            }
+            return temp;
+        }
+
+        public static int GetIndex(int[] arr, int item)
+        {
+            for (int i = 0; i < arr.Length; i++)
+            {
+                if (arr[i] == item)
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
         static void Main(string[] args)
         {
-            foreach (int item in MyMath.NewFactors(20))
-            //foreach (int item in MyMath.PrimesUntil(50))
+            /*foreach (int item in MyMaths.Factors(1753))
+            //foreach (int item in MyMath.PrimesUntil(1753))
             {
                 Console.WriteLine("Factor: {0}", item);
-            }
+            }*/
+
+            /*int[] test = { 4, 8, 2, 6, 9, 0, 1, 23, 6 };
+            int[] newarr = RemoveFromArray(test, 5);
+            IntArrayPrinter(newarr);*/
+
+            Fraction fraction = new Fraction("27/54");
+            string simplified = fraction.Simplify();
+            Console.WriteLine(simplified);
         }
     }
 }
