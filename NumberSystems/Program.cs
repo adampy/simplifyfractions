@@ -107,49 +107,32 @@ namespace NumberSystems
             }
 
             string simple = "";
-            /*
-             * get all prime factors of top as array
-             * get all prime factors of bottom as array
-             * check all primes and if there are common ones, remove them
-             * top = multiply all of remaining factors
-             * bottom = multiply all of remaining factors
-             * return "top/bottom";
-             * */
-
             int[] topFactors = MyMaths.Factors(top);
             int[] bottomFactors = MyMaths.Factors(bottom);
 
-            /*for (int i = 0; i < topFactors.Length; i++)
+            //remove common factors until a pass happens where none is removed
+            bool changed = true;
+            while (changed)
             {
-                int numerator = topFactors[i];
-                for (int j = 0; j < bottomFactors.Length; j++)
+                changed = false;
+                for (int i = 0; i < topFactors.Length; i++)
                 {
-                    int denominator = bottomFactors[j];
-                    if (numerator == denominator)
+                    int item = topFactors[i];
+                    if (bottomFactors.Contains(item))
                     {
-                        int[] tempTop = Program.RemoveFromArray(topFactors, i);
-                        int[] tempBottom = Program.RemoveFromArray(bottomFactors, j);
-                        topFactors = tempTop;
-                        bottomFactors = tempBottom;
+                        //remove item from factors
+                        //remove item's index element from bottom factors
+
+                        changed = true;
+                        int[] temptop = Program.RemoveFromArray(topFactors, i);
+                        int[] tempbottom = Program.RemoveFromArray(bottomFactors, Program.GetIndex(bottomFactors, item));
+                        topFactors = temptop;
+                        bottomFactors = tempbottom;
                     }
-                }
-            }*/
-
-            for (int i = 0; i < topFactors.Length; i++)
-            {
-                int item = topFactors[i];
-                if (bottomFactors.Contains(item))
-                {
-                    //remove item from factors
-                    //remove item's index element from bottom factors
-
-                    int[] temptop = Program.RemoveFromArray(topFactors, i);
-                    int[] tempbottom = Program.RemoveFromArray(bottomFactors, Program.GetIndex(bottomFactors, item));
-                    topFactors = temptop;
-                    bottomFactors = tempbottom;
                 }
             }
 
+            //make top and bottom readable as single integers
             int newNumerator = 1;
             int newDenominator = 1;
 
@@ -162,8 +145,6 @@ namespace NumberSystems
                 newDenominator *= item;
             }
 
-            //Program.IntArrayPrinter(topFactors);
-            //Program.IntArrayPrinter(bottomFactors);
             simple = Convert.ToString(newNumerator) + "/" + Convert.ToString(newDenominator);
             return simple;
         }
@@ -206,6 +187,13 @@ namespace NumberSystems
             return -1;
         }
 
+        public static string Simplify(string input)
+        {
+            Fraction fraction = new Fraction(input);
+            string simplified = fraction.Simplify();
+            return simplified;
+        }
+
         static void Main(string[] args)
         {
             /*foreach (int item in MyMaths.Factors(1753))
@@ -218,9 +206,16 @@ namespace NumberSystems
             int[] newarr = RemoveFromArray(test, 5);
             IntArrayPrinter(newarr);*/
 
-            Fraction fraction = new Fraction("27/54");
-            string simplified = fraction.Simplify();
-            Console.WriteLine(simplified);
+            string input = "start";
+            while (input != "stop")
+            {
+                Console.Write("Fraction: ");
+                input = Console.ReadLine();
+
+                string str = Simplify(input);
+
+                Console.WriteLine("Simplified fraction: {0}", str);
+            }
         }
     }
 }
